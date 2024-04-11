@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>frames</key>
+    <dict>
+      <key>Character-Fall (1)</key>
+      <dict>
+        <key>frame</key>
+        <string>{{0,0},{23,27}}</string>
+        <key>offset</key>
+        <string>{0.5,-2.5}</string>
+        <key>rotated</key>
+        <false/>
+        <key>sourceColorRect</key>
+        <string>{{5,5},{23,27}}</string>
+        <key>sourceSize</key>
+        <string>{32,32}</string>
+      </dict>
+    </dict>
+    <key>metadata</key>
+    <dict>
+      <key>format</key>
+      <integer>2</integer>
+      <key>pixelFormat</key>
+      <string>RGBA8888</string>
+      <key>premultiplyAlpha</key>
+      <false/>
+      <key>realTextureFileName</key>
+      <string>Character-Fall.png</string>
+      <key>size</key>
+      <string>{23,27}</string>
+      <key>textureFileName</key>
+      <string>Character-Fall</string>
+    </dict>
+  </dict>
+</plist>
