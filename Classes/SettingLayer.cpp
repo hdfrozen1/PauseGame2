@@ -32,7 +32,6 @@ bool SettingLayer::init()
     _graSlider->setRotation(-90);
     this->addChild(_graSlider);
     _graSliderSize = _graSlider->getContentSize();
-    
 
     _graNode = Node::create();
     auto gravitybody2 = PhysicsBody::createBox(_graSlider->getSlidBallNormalRenderer()->getContentSize(), PhysicsMaterial(1, 0, 1));
@@ -43,7 +42,7 @@ bool SettingLayer::init()
     gravitybody2->setDynamic(false);
     gravitybody2->setCategoryBitmask(DefineBitmask::Box);
     gravitybody2->setCollisionBitmask(DefineBitmask::Character);
-    gravitybody2->setContactTestBitmask(DefineBitmask::Character);
+    gravitybody2->setContactTestBitmask(DefineBitmask::Character );
 
     _graSlider->addEventListener([&](Ref* sender, ui::Slider::EventType type) {
         if (type == ui::Slider::EventType::ON_PERCENTAGE_CHANGED) {
@@ -56,6 +55,9 @@ bool SettingLayer::init()
                 log("lenght : %f", _graSliderSize.height);
                 float the_x =y_pos - _graSliderSize.width / 2 + lenght;
                 _graNode->setPosition(Vec2(distance, the_x));
+
+                float y_gravity = clampf((float)percent * (-1), -98.0f, -12.0f);
+                Director::getInstance()->getRunningScene()->getPhysicsWorld()->setGravity(Vec2(0, y_gravity));
             }
         }
         });
@@ -79,9 +81,9 @@ bool SettingLayer::init()
     gravitybody3->setGravityEnable(false);
     gravitybody3->setDynamic(false);
     gravitybody3->setCategoryBitmask(DefineBitmask::Box);
-    gravitybody3->setCollisionBitmask(DefineBitmask::Character);
-    gravitybody3->setContactTestBitmask(DefineBitmask::Character);
-
+   
+    gravitybody3->setContactTestBitmask(DefineBitmask::Character );
+ gravitybody3->setCollisionBitmask(DefineBitmask::Character);
     _camSlider->addEventListener([&](Ref* sender, ui::Slider::EventType type) {
         if (type == ui::Slider::EventType::ON_PERCENTAGE_CHANGED) {
             ui::Slider* slider2 = dynamic_cast<ui::Slider*>(sender);
@@ -93,6 +95,7 @@ bool SettingLayer::init()
                 log("lenght : %f", _camSliderSize.height);
                 float the_x = y_pos - _camSliderSize.width / 2 + lenght;
                 _camNode->setPosition(Vec2(distance*2, the_x));
+
             }
         }
         });
@@ -116,9 +119,9 @@ bool SettingLayer::init()
     gravitybody4->setGravityEnable(false);
     gravitybody4->setDynamic(false);
     gravitybody4->setCategoryBitmask(DefineBitmask::Box);
-    gravitybody4->setCollisionBitmask(DefineBitmask::Character);
-    gravitybody4->setContactTestBitmask(DefineBitmask::Character);
-
+    
+    gravitybody4->setContactTestBitmask(DefineBitmask::Character );
+gravitybody4->setCollisionBitmask(DefineBitmask::Character);
     _spdSlider->addEventListener([&](Ref* sender, ui::Slider::EventType type) {
         if (type == ui::Slider::EventType::ON_PERCENTAGE_CHANGED) {
             ui::Slider* slider2 = dynamic_cast<ui::Slider*>(sender);
@@ -130,6 +133,9 @@ bool SettingLayer::init()
                 log("lenght : %f", _spdSliderSize.height);
                 float the_x = y_pos - _spdSliderSize.width / 2 + lenght;
                 _spdNode->setPosition(Vec2(distance * 3, the_x));
+
+                float y_speed = clampf((float)percent / 10, 1.0f, 9.0f);
+                Director::getInstance()->getRunningScene()->getPhysicsWorld()->setSpeed(y_speed);
             }
         }
         });

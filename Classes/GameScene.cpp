@@ -2,9 +2,7 @@
 #include "Wall/Wall.h"
 #include "KeyBoardInput.h"
 #include "ui/CocosGUI.h"
-#include "GravityManager/GravityManager.h"
 #include "DefineBitmask.h"
-#include "CameraUIControl.h"
 #include "SettingLayer.h"
 Scene* GameScene::create(std::string mapName)
 {

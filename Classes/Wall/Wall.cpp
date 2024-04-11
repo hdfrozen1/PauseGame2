@@ -20,7 +20,7 @@ bool Wall::init(std::vector<Vec2> points)
         return false;
     }
 
-    auto nodebody = PhysicsBody::createEdgePolygon(points.data(), points.size());
+    auto nodebody = PhysicsBody::createEdgePolygon(points.data(), points.size(),PHYSICSBODY_MATERIAL_DEFAULT,4);
     this->drawPoly(points.data(), points.size(), true, Color4F::WHITE);
     this->setLineWidth(4);
     this->setPhysicsBody(nodebody);

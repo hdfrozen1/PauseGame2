@@ -43,11 +43,27 @@ bool Character::init(std::string file)
     auto body = PhysicsBody::createBox(_model->getContentSize(), PhysicsMaterial(1, 0, 1));
     this->setPhysicsBody(body);
     this->addChild(_stateMachine);
-    body->setMass(0.3f);
     body->setRotationEnable(false);
-    body->setCategoryBitmask(DefineBitmask::Character);
-    body->setContactTestBitmask(DefineBitmask::Wall| DefineBitmask::Box);
-    body->setCollisionBitmask(DefineBitmask::Wall | DefineBitmask::Box);
+
+
+    feetNode = Node::create();
+    auto bodyGround = PhysicsBody::createEdgeSegment(Vec2::ZERO, Vec2(10, 0), PhysicsMaterial(1, 0, 1));
+    bodyGround->setCategoryBitmask(DefineBitmask::Character);
+    bodyGround->setCollisionBitmask(DefineBitmask::NON);
+    bodyGround->setContactTestBitmask(DefineBitmask::Wall | DefineBitmask::Box);
+    bodyGround->setDynamic(false);
+    feetNode->setPhysicsBody(bodyGround);
+
+    auto yGap = 15.0f;
+    auto xGap = 6.0f;
+
+    feetNode->setPosition(this->getPositionX() - xGap, this->getPositionY() - yGap);
+    this->addChild(feetNode);
+
+    auto listener = EventListenerPhysicsContact::create();
+    listener->onContactBegin = CC_CALLBACK_1(Character::callbackOnContactBegin, this);
+    listener->onContactSeparate = CC_CALLBACK_1(Character::callbackOnContactSeparate, this);
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
     
 
     return true;
@@ -69,3 +85,33 @@ bool Character::loadAnimations()
 
     return true;
 }
+
+bool Character::callbackOnContactBegin(PhysicsContact& contact)
+{
+    auto nodeA = contact.getShapeA()->getBody()->getNode();
+    auto nodeB = contact.getShapeB()->getBody()->getNode();
+
+    if (nodeA != feetNode && nodeB != feetNode) return false;
+
+    auto target = (nodeA == feetNode) ? nodeB : nodeA;
+    if ((target->getPhysicsBody()->getCategoryBitmask() == DefineBitmask::Wall) || (target->getPhysicsBody()->getCategoryBitmask() == DefineBitmask::Box)) {
+        isOnGround = true;
+        log("1");
+    }
+    return true;
+}
+
+bool Character::callbackOnContactSeparate(PhysicsContact& contact)
+{
+    auto nodeA = contact.getShapeA()->getBody()->getNode();
+    auto nodeB = contact.getShapeB()->getBody()->getNode();
+
+    if (nodeA != feetNode && nodeB != feetNode) return false;
+
+    auto target = (nodeA == feetNode) ? nodeB : nodeA;
+    if ((target->getPhysicsBody()->getCategoryBitmask() == DefineBitmask::Wall) || (target->getPhysicsBody()->getCategoryBitmask() == DefineBitmask::Box)) {
+        isOnGround = false;
+    }
+    return false;
+}
+

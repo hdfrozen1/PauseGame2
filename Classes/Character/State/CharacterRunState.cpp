@@ -18,7 +18,12 @@ std::string CharacterRunState::updateState()
 	auto keyboard = KeyboardInput::getInstance();
 	// update
 	Vec2 direction = keyboard->getDirection();
-	static_cast<Character*>(_owner)->getPhysicsBody()->applyImpulse(Vec2(2,0) * direction.x);
+	if (keyboard->getKey(EventKeyboard::KeyCode::KEY_A)) {
+		static_cast<Character*>(_owner)->getPhysicsBody()->setVelocity(Vec2(40, -(_owner->getPhysicsBody()->getVelocity().y)) * direction.x);
+	}
+	if (keyboard->getKey(EventKeyboard::KeyCode::KEY_D)) {
+		static_cast<Character*>(_owner)->getPhysicsBody()->setVelocity(Vec2(40, _owner->getPhysicsBody()->getVelocity().y) * direction.x);
+	}
 
 	if (direction.x != 0)
 		static_cast<Character*>(_owner)->getModel()->setFlippedX(direction.x < 0);

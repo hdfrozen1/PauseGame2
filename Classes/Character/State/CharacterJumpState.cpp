@@ -18,7 +18,16 @@ std::string CharacterJumpState::updateState()
 	auto keyboard = KeyboardInput::getInstance();
 	// update
 	Vec2 direction = keyboard->getDirection();
-	static_cast<Character*>(_owner)->getPhysicsBody()->applyImpulse(Vec2(0, 1) * 5);
+	auto character = static_cast<Character*>(_owner);
+	if (character->isOnGround) {
+		static_cast<Character*>(_owner)->getPhysicsBody()->setVelocity(Vec2(_owner->getPhysicsBody()->getVelocity().x, 100));
+	}
+	if (keyboard->getKey(EventKeyboard::KeyCode::KEY_A)) {
+		static_cast<Character*>(_owner)->getPhysicsBody()->setVelocity(Vec2(-40, _owner->getPhysicsBody()->getVelocity().y));
+	}
+	if (keyboard->getKey(EventKeyboard::KeyCode::KEY_D)) {
+		static_cast<Character*>(_owner)->getPhysicsBody()->setVelocity(Vec2(40, _owner->getPhysicsBody()->getVelocity().y));
+	}
 
 	if (direction.x != 0)
 		static_cast<Character*>(_owner)->getModel()->setFlippedX(direction.x < 0);
