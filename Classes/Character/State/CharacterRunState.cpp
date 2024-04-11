@@ -19,10 +19,10 @@ std::string CharacterRunState::updateState()
 	// update
 	Vec2 direction = keyboard->getDirection();
 	if (keyboard->getKey(EventKeyboard::KeyCode::KEY_A)) {
-		static_cast<Character*>(_owner)->getPhysicsBody()->setVelocity(Vec2(40, -(_owner->getPhysicsBody()->getVelocity().y)) * direction.x);
+		static_cast<Character*>(_owner)->getPhysicsBody()->setVelocity(Vec2(-40, (_owner->getPhysicsBody()->getVelocity().y)) );
 	}
 	if (keyboard->getKey(EventKeyboard::KeyCode::KEY_D)) {
-		static_cast<Character*>(_owner)->getPhysicsBody()->setVelocity(Vec2(40, _owner->getPhysicsBody()->getVelocity().y) * direction.x);
+		static_cast<Character*>(_owner)->getPhysicsBody()->setVelocity(Vec2(40, _owner->getPhysicsBody()->getVelocity().y) );
 	}
 
 	if (direction.x != 0)

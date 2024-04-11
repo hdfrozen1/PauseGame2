@@ -56,7 +56,7 @@ bool SettingLayer::init()
                 float the_x =y_pos - _graSliderSize.width / 2 + lenght;
                 _graNode->setPosition(Vec2(distance, the_x));
 
-                float y_gravity = clampf((float)percent * (-1), -98.0f, -12.0f);
+                float y_gravity = clampf((12.0f + 86.0f * (float)percent / 100)*-1, -98.0f, -12.0f);
                 Director::getInstance()->getRunningScene()->getPhysicsWorld()->setGravity(Vec2(0, y_gravity));
             }
         }
@@ -95,6 +95,13 @@ bool SettingLayer::init()
                 log("lenght : %f", _camSliderSize.height);
                 float the_x = y_pos - _camSliderSize.width / 2 + lenght;
                 _camNode->setPosition(Vec2(distance*2, the_x));
+             
+                float y_campos = clampf(500.0f+800.0f*(float)percent/100, 500, 1300);
+                Director::getInstance()->getRunningScene()->getDefaultCamera()->setPosition3D(Vec3(640, 480, y_campos));
+                float scales = y_campos / 831.384399;
+
+                this->setScale(scales);
+
 
             }
         }
@@ -134,12 +141,11 @@ gravitybody4->setCollisionBitmask(DefineBitmask::Character);
                 float the_x = y_pos - _spdSliderSize.width / 2 + lenght;
                 _spdNode->setPosition(Vec2(distance * 3, the_x));
 
-                float y_speed = clampf((float)percent / 10, 1.0f, 9.0f);
+                float y_speed = clampf(1.0f + 8.0f * (float)percent / 100, 1.0f, 9.0f);
                 Director::getInstance()->getRunningScene()->getPhysicsWorld()->setSpeed(y_speed);
             }
         }
         });
-
 
     return true;
 }

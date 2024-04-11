@@ -63,80 +63,13 @@ bool GameScene::init(std::string mapName)
 	_position2.x = charPoint["x"].asFloat();
 	_position2.y = charPoint["y"].asFloat();
 
-
-	/*auto character = Sprite::create("CloseNormal.png");
-	auto charbody = PhysicsBody::createCircle(character->getContentSize().width / 2,PhysicsMaterial(1, 0, 0));
-	character->setPosition(_position2);
-	this->addChild(character);
-	character->setPhysicsBody(charbody);
-	charbody->applyImpulse(Vec2(0, 99999));
-	log("%d", charbody->getMass());*/
-
 	_character = Character::create("Character");
 	_character->setPosition(_position2);
 	this->addChild(_character, 2);
-	
-	/*auto slider = ui::Slider::create();
-	slider->loadBarTexture("Slider.png");
-	slider->loadSlidBallTextureNormal("Gravity.png");
-	slider->loadSlidBallTexturePressed("Gravity.png");
-	slider->setPosition(Vec2(visibleSize.width/2,visibleSize.height/2));
-	this->addChild(slider);
-	slider->setPercent(50);
-	slider->setRotation(-90);
-
-	gravitynode = Node::create();
-	auto gravitybody2 = PhysicsBody::createBox(slider->getSlidBallNormalRenderer()->getContentSize(),PhysicsMaterial(1,0,1));
-	gravitynode->setPhysicsBody(gravitybody2);
-	gravitynode->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
-	this->addChild(gravitynode);
-	gravitybody2->setGravityEnable(false);
-	gravitybody2->setDynamic(false);
-	gravitybody2->setCategoryBitmask(DefineBitmask::Box);
-	gravitybody2->setCollisionBitmask(DefineBitmask::Character);
-	gravitybody2->setContactTestBitmask(DefineBitmask::Character);
-	
-
-	slidersize = slider->getContentSize();
-
-	slider->addEventListener([&](Ref* sender, ui::Slider::EventType type) {
-		if (type == ui::Slider::EventType::ON_PERCENTAGE_CHANGED) {
-			ui::Slider* slider2 = dynamic_cast<ui::Slider*>(sender);
-			if (slider2) {
-				int percent = slider2->getPercent();
-				log("percent : %d", percent);
-				
-				float lenght = slidersize.width / 100 * percent;
-				log("lenght : %f", slidersize.height);
-				float the_x = 480 - slidersize.width / 2 + lenght;
-				gravitynode->setPosition(Vec2(640, the_x));
-			}
-		}
-		});*/
-
-	/*auto camera = this->getDefaultCamera();
-	Vec3 campos = camera->getPosition3D();
-	Vec3 newcampos = Vec3(640, 480, 1200);
-	camera->setPosition3D(newcampos);
-
-
-	float scale = newcampos.z / campos.z;
-	auto close = Sprite::create("CloseSelected.png");
-	close->setPosition(Vec2(500, 500));
-	close->setScale(scale);
-	this->addChild(close);
-
-	auto closebody = PhysicsBody::createBox(close->getContentSize(),PHYSICSBODY_MATERIAL_DEFAULT,Vec2(0.5,0.5));
-	close->setPhysicsBody(closebody);
-	closebody->setCategoryBitmask(DefineBitmask::Wall);
-	closebody->setContactTestBitmask(DefineBitmask::Character);
-	closebody->setCollisionBitmask(DefineBitmask::Character);
-	closebody->setGravityEnable(false);
-	closebody->setDynamic(false);*/
 
 	auto setting = SettingLayer::create();
 	this->addChild(setting);
-	
+
 
 	return true;
 }
@@ -149,3 +82,8 @@ void GameScene::onEnter()
 	
 	this->addChild(KeyboardInput::getInstance());
 }
+
+
+
+
+

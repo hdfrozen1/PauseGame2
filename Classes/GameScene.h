@@ -4,6 +4,7 @@
 #include "cocos2d.h"
 #include "Map/Map.h"
 #include "Character/Character.h"
+#include "ui/CocosGUI.h"
 USING_NS_CC;
 
 class GameScene :public Scene {
@@ -15,8 +16,6 @@ protected:
     GameMap* _gameMap;
     Character* _character;
     void onEnter() override;
-    Node* gravitynode;
-    Size slidersize;
 
 };
 
