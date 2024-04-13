@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="40" height="30" tilewidth="32" tileheight="32" infinite="0" nextlayerid="6" nextobjectid="18">
+ <properties>
+  <property name="default_scale" type="float" value="1"/>
+ </properties>
  <tileset firstgid="1" source="TX Tileset Stone Ground.tsx"/>
  <tileset firstgid="65" source="TX Tileset Grass.tsx"/>
  <layer id="5" name="Bg" width="40" height="30">
@@ -40,6 +43,9 @@
  </objectgroup>
  <objectgroup id="4" name="Character">
   <object id="17" name="SpawnPoint" x="581.333" y="757.333">
+   <properties>
+    <property name="default_scale" type="float" value="2"/>
+   </properties>
    <point/>
   </object>
  </objectgroup>

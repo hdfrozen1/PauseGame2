@@ -1,9 +1,10 @@
 #include "SettingLayer.h"
 #include "DefineBitmask.h"
-Layer* SettingLayer::create()
+#include "Character/Character.h"
+Layer* SettingLayer::create(Node* character)
 {
     auto newObject = new SettingLayer();
-    if (newObject != nullptr && newObject->init())
+    if (newObject != nullptr && newObject->init(character))
     {
         newObject->autorelease();
         return newObject;
@@ -13,12 +14,12 @@ Layer* SettingLayer::create()
     return nullptr;
 }
 
-bool SettingLayer::init()
+bool SettingLayer::init(Node* character)
 {
     if (!Layer::init()) {
         return false;
     }
-
+    _char = character;
     visibleSize = Director::getInstance()->getVisibleSize();
     distance = visibleSize.width / 4;
     y_pos = visibleSize.height / 2;
@@ -49,10 +50,10 @@ bool SettingLayer::init()
             ui::Slider* slider2 = dynamic_cast<ui::Slider*>(sender);
             if (slider2) {
                 int percent = slider2->getPercent();
-                log("percent : %d", percent);
+                //log("percent : %d", percent);
 
                 float lenght = _graSliderSize.width / 100 * percent;
-                log("lenght : %f", _graSliderSize.height);
+                //log("lenght : %f", _graSliderSize.height);
                 float the_x =y_pos - _graSliderSize.width / 2 + lenght;
                 _graNode->setPosition(Vec2(distance, the_x));
 
@@ -69,11 +70,12 @@ bool SettingLayer::init()
     _camSlider->loadSlidBallTexturePressed("Camera.png");
     _camSlider->setPosition(Vec2(distance*2, y_pos));
     _camSlider->setPercent(50);
-    _camSlider->setRotation(-90);
+    _camSlider->setRotation(90);
     this->addChild(_camSlider);
     _camSliderSize = _camSlider->getContentSize();
 
     _camNode = Node::create();
+    _camNode->setTag(123);
     auto gravitybody3 = PhysicsBody::createBox(_camSlider->getSlidBallNormalRenderer()->getContentSize(), PhysicsMaterial(1, 0, 1));
     _camNode->setPhysicsBody(gravitybody3);
     _camNode->setPosition(Vec2(distance * 2, y_pos));
@@ -81,27 +83,30 @@ bool SettingLayer::init()
     gravitybody3->setGravityEnable(false);
     gravitybody3->setDynamic(false);
     gravitybody3->setCategoryBitmask(DefineBitmask::Box);
-   
-    gravitybody3->setContactTestBitmask(DefineBitmask::Character );
- gravitybody3->setCollisionBitmask(DefineBitmask::Character);
+    gravitybody3->setContactTestBitmask(DefineBitmask::Character);
+    gravitybody3->setCollisionBitmask(DefineBitmask::Character);
+
     _camSlider->addEventListener([&](Ref* sender, ui::Slider::EventType type) {
         if (type == ui::Slider::EventType::ON_PERCENTAGE_CHANGED) {
             ui::Slider* slider2 = dynamic_cast<ui::Slider*>(sender);
             if (slider2) {
                 int percent = slider2->getPercent();
-                log("percent : %d", percent);
+                //log("percent : %d", percent);
 
                 float lenght = _camSliderSize.width / 100 * percent;
-                log("lenght : %f", _camSliderSize.height);
-                float the_x = y_pos - _camSliderSize.width / 2 + lenght;
+                //log("lenght : %f", _camSliderSize.height);
+                float the_x = y_pos + _camSliderSize.width / 2 - lenght;
                 _camNode->setPosition(Vec2(distance*2, the_x));
              
                 float y_campos = clampf(500.0f+800.0f*(float)percent/100, 500, 1300);
                 Director::getInstance()->getRunningScene()->getDefaultCamera()->setPosition3D(Vec3(640, 480, y_campos));
-                float scales = y_campos / 831.384399;
+                scales = y_campos / 831.384399;
 
                 this->setScale(scales);
-
+                if (onCam()) {
+                    float chardefault = static_cast<Character*>(_char)->getDefaultScale();
+                    _char->setScale(scales);
+                }
 
             }
         }
@@ -128,16 +133,16 @@ bool SettingLayer::init()
     gravitybody4->setCategoryBitmask(DefineBitmask::Box);
     
     gravitybody4->setContactTestBitmask(DefineBitmask::Character );
-gravitybody4->setCollisionBitmask(DefineBitmask::Character);
+    gravitybody4->setCollisionBitmask(DefineBitmask::Character);
     _spdSlider->addEventListener([&](Ref* sender, ui::Slider::EventType type) {
         if (type == ui::Slider::EventType::ON_PERCENTAGE_CHANGED) {
             ui::Slider* slider2 = dynamic_cast<ui::Slider*>(sender);
             if (slider2) {
                 int percent = slider2->getPercent();
-                log("percent : %d", percent);
+                //log("percent : %d", percent);
 
                 float lenght = _spdSliderSize.width / 100 * percent;
-                log("lenght : %f", _spdSliderSize.height);
+                //log("lenght : %f", _spdSliderSize.height);
                 float the_x = y_pos - _spdSliderSize.width / 2 + lenght;
                 _spdNode->setPosition(Vec2(distance * 3, the_x));
 
@@ -146,6 +151,10 @@ gravitybody4->setCollisionBitmask(DefineBitmask::Character);
             }
         }
         });
-
     return true;
+}
+
+bool SettingLayer::onCam()
+{
+    return static_cast<Character*>(_char)->isonCam();
 }

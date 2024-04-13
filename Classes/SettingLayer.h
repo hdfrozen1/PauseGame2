@@ -3,11 +3,12 @@
 
 #include "cocos2d.h"
 #include "ui/CocosGUI.h"
+
 USING_NS_CC;
 class SettingLayer :public Layer {
 public:
-	static Layer* create();
-	virtual bool init();
+	static Layer* create(Node* character);
+	virtual bool init(Node* character);
 private:
 	ui::Slider* _graSlider;
 	ui::Slider* _camSlider;
@@ -24,6 +25,10 @@ private:
 	float y_pos;
 	float distance;
 	Size visibleSize;
+	float scales;
+	Node* _char;
+
+	bool onCam();
 };
 
 #endif // !__SETTING_LAYER_H__

@@ -24,13 +24,15 @@ bool GameScene::init(std::string mapName)
 		return false;
 	}
 
+	
+	
+
 	this->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
 
 	this->getPhysicsWorld()->setGravity(Vec2(0, -98.0f));
 	this->getPhysicsWorld()->setSpeed(5);
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
-
 
 	// Map
 	_gameMap = GameMap::create(mapName);
@@ -59,15 +61,16 @@ bool GameScene::init(std::string mapName)
 
 	TMXObjectGroup* spawnPoint = _gameMap->getObjectGroup("Character");
 	ValueMap charPoint = spawnPoint->getObject("SpawnPoint");
+	float defaultscales = charPoint["default_scale"].asFloat();
 	Vec2 _position2;
 	_position2.x = charPoint["x"].asFloat();
 	_position2.y = charPoint["y"].asFloat();
 
-	_character = Character::create("Character");
+	_character = Character::create("Character",defaultscales);
 	_character->setPosition(_position2);
 	this->addChild(_character, 2);
 
-	auto setting = SettingLayer::create();
+	auto setting = SettingLayer::create(_character);
 	this->addChild(setting);
 
 

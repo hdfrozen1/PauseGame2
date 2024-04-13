@@ -5,12 +5,13 @@
 #include "State/CharacterIdleState.h"
 #include "State/CharacterRunState.h"
 #include "DefineBitmask.h"
+#include "SettingLayer.h"
 class StateMachine;
 
-Character* Character::create(std::string file)
+Character* Character::create(std::string file,float scale)
 {
     auto newObject = new Character();
-    if (newObject != nullptr && newObject->init(file))
+    if (newObject != nullptr && newObject->init(file,scale))
     {
         newObject->autorelease();
         return newObject;
@@ -20,14 +21,14 @@ Character* Character::create(std::string file)
     return nullptr;
 }
 
-bool Character::init(std::string file)
+bool Character::init(std::string file, float scale)
 {
     if (!Node::init())
     {
         log("Init Entity failed!");
         return false;
     }
-    
+    this->_defaultScale = scale;
     this->_thefile = file;
     loadAnimations();
     _model = Sprite::createWithSpriteFrameName(_thefile + "-Idle (1)");
@@ -40,32 +41,33 @@ bool Character::init(std::string file)
     _stateMachine->addState("Fall", new CharacterFallState());
     _stateMachine->setCurrentState("Idle");
 
-    auto body = PhysicsBody::createBox(_model->getContentSize(), PhysicsMaterial(1, 0, 1));
+    body = PhysicsBody::createBox(_model->getContentSize(), PhysicsMaterial(1, 0, 1));
     this->setPhysicsBody(body);
     this->addChild(_stateMachine);
     body->setRotationEnable(false);
 
 
     feetNode = Node::create();
-    auto bodyGround = PhysicsBody::createEdgeSegment(Vec2::ZERO, Vec2(10, 0), PhysicsMaterial(1, 0, 1));
+    bodyGround = PhysicsBody::createEdgeSegment(Vec2::ZERO, Vec2(14.4, 1), PhysicsMaterial(1, 0, 1));
     bodyGround->setCategoryBitmask(DefineBitmask::Character);
     bodyGround->setCollisionBitmask(DefineBitmask::NON);
     bodyGround->setContactTestBitmask(DefineBitmask::Wall | DefineBitmask::Box);
     bodyGround->setDynamic(false);
     feetNode->setPhysicsBody(bodyGround);
 
-    auto yGap = 15.0f;
-    auto xGap = 6.0f;
+    auto yGap = 16.1f;
+    auto xGap = 7.2;
 
     feetNode->setPosition(this->getPositionX() - xGap, this->getPositionY() - yGap);
     this->addChild(feetNode);
+    this->setScale(_defaultScale);
 
     auto listener = EventListenerPhysicsContact::create();
     listener->onContactBegin = CC_CALLBACK_1(Character::callbackOnContactBegin, this);
     listener->onContactSeparate = CC_CALLBACK_1(Character::callbackOnContactSeparate, this);
     _eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
     
-
+    
     return true;
 }
 
@@ -94,9 +96,19 @@ bool Character::callbackOnContactBegin(PhysicsContact& contact)
     if (nodeA != feetNode && nodeB != feetNode) return false;
 
     auto target = (nodeA == feetNode) ? nodeB : nodeA;
+    
     if ((target->getPhysicsBody()->getCategoryBitmask() == DefineBitmask::Wall) || (target->getPhysicsBody()->getCategoryBitmask() == DefineBitmask::Box)) {
         isOnGround = true;
-        log("1");
+        log("can jump");
+        if (target->getPhysicsBody()->getCategoryBitmask() == DefineBitmask::Box) {
+            isOnBox = true;
+            boxNode = target;
+            delta = this->getPositionY() - target->getPositionY();
+            if (target->getTag() == 123) {
+                _isOnCam = true;
+            
+            }
+        }
     }
     return true;
 }
@@ -111,7 +123,26 @@ bool Character::callbackOnContactSeparate(PhysicsContact& contact)
     auto target = (nodeA == feetNode) ? nodeB : nodeA;
     if ((target->getPhysicsBody()->getCategoryBitmask() == DefineBitmask::Wall) || (target->getPhysicsBody()->getCategoryBitmask() == DefineBitmask::Box)) {
         isOnGround = false;
-    }
+        isOnBox = false;
+        log("cant jump");
+        if (target->getTag() == 123) {
+            _isOnCam = false;
+            _defaultScale = this->getScale();
+        }
+    } 
     return false;
+}
+
+void Character::update(float dt)
+{
+    if (isOnBox && !_isOnCam) {
+        this->setPositionY(boxNode->getPositionY() + delta);
+    }
+}
+
+void Character::onEnter()
+{
+    Node::onEnter();
+    
 }
 
